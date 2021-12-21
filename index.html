@@ -1,0 +1,183 @@
+<html>
+<head>
+<title> Time </title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(#434145, #070708);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: contain;
+    z-index: 1;
+}
+
+.clock {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    background: #222;
+    border-radius: 50%;
+    border: 15px solid #222;
+    box-shadow: 0 0 20px 20px rgba(253, 253, 253, 0.26);
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.hour {
+    position: absolute;
+    top: 49px;
+    left: 50%;
+    width: 6px;
+    height: 100px;
+    background: none;
+    border-radius: 50% 50% 0% 0%;
+    border: 2px solid white;
+    border-top: 10px solid royalblue;
+    transform: translateX(-50%) rotate(0deg);
+    transform-origin: bottom left;
+}
+
+.minute {
+    position: absolute;
+    top: 34px;
+    left: 50%;
+    width: 6px;
+    height: 115px;
+    background: none;
+    border-radius: 50% 50% 0% 0%;
+    border: 2px solid white;
+    border-top: 10px solid cyan;
+    transform: translateX(-50%)  rotate(0deg);
+    transform-origin: bottom left;
+}
+
+.seconds {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    width: 4px;
+    height: 135px;
+    background: none;
+    border-radius: 50% 50% 0% 0%;
+    border: 2px solid white;
+    border-top: 10px solid red;
+    transform: translateX(-50%) rotate(0deg);
+    transform-origin: bottom center;
+}
+
+.center {
+    width: 77px;
+    height: 77px;
+    background: #222;
+    border-radius: 50%;
+    border: 2px solid white;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: wheet;
+    transform: translateY(5px);
+    cursor: pointer;
+}
+span {
+    font-size: 20px;
+}
+</style>
+</head>
+<body ondblclick="requestFullscreen();">
+<div class="container" ondblclick="document.exitFullscreen();">
+  <div class="clock-shell"></div>
+  <div class="clock">
+    <div class="hour pointer"></div>
+    <div class="minute pointer"></div>
+    <div class="seconds pointer"></div>
+    <div class="center"  onclick="hideit();">
+      <span class="dhour digit">00</span>
+      <span class="seperate">:</span>
+      <span class="dminute digit">00</span>
+      <span class="seperate" id="secnsep">:</span>
+      <span class="dsecond digit" id="secndgt">00</span>
+    </div>
+  </div>
+</div>
+<script>
+const secondpoint = document.querySelector('.seconds');
+const minutepoint = document.querySelector('.minute');
+const hourpoint = document.querySelector('.hour');
+const dsec = document.querySelector('.dsecond');
+const dmin = document.querySelector('.dminute');
+const dhour = document.querySelector('.dhour');
+const digit = document.querySelector('.digit');
+
+
+const setTime = () => {
+    const now = new Date();
+    const ms = now.getMilliseconds();
+    const seconds = now.getSeconds();
+    const minutes = now.getMinutes();
+    let hours = now.getHours();
+    if (hours > 12) {
+    hours = hours - 12;
+    };
+    const secms = seconds+(ms/1000);
+    const minms = minutes+(secms/60);
+    const hourms = hours+(minms/60);
+
+
+    const secDeg = ((secms / 60) * 360);
+    const minDeg = (minms / 60 * 360);
+    const hourDeg = (hourms / 12 * 360);
+
+    secondpoint.style.transform = `rotate(${secDeg}deg) translateX(-50%)`;
+    minutepoint.style.transform = `rotate(${minDeg}deg) translateX(-50%)`;
+    hourpoint.style.transform = `rotate(${hourDeg}deg) translateX(-50%)`;
+    dsec.innerHTML = seconds;
+        if(dsec.innerHTML <= 9){
+            dsec.innerHTML = `0${seconds}`;
+        }
+    dmin.innerHTML = minutes;
+        if(dmin.innerHTML <= 9){
+            dmin.innerHTML = `0${minutes}`;
+        }
+    dhour.innerHTML = hours;
+        if(dhour.innerHTML <= 9){
+            dhour.innerHTML = `0${hours}`;
+        }
+}
+
+setInterval(setTime,10);
+</script>
+<script>
+function hideit(){
+  var x = document.getElementById("secnsep");
+  var y = document.getElementById("secndgt");
+  if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  if (y.style.display === "none") {
+      y.style.display = "block";
+    } else {
+      y.style.display = "none";
+    }
+};
+</script>
+<script>
+// for phones
+document.getElementByClassName("body").addEventListener("touchstart", requestFullscreen);
+document.getElementByClassName("body").addEventListener("touchstart", exitFullscreen);
+</script>
+</body>
+</html>
